@@ -55,14 +55,58 @@ class dophonegap (
     }
   }
   
-  # install library pre-reqs
-  if ! defined(Package['ncurses-devel']) {
-    package { 'ncurses-devel' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+  case $operatingsystem {
+    centos, redhat, fedora: {
+      # install 64-bit library pre-reqs
+      if ! defined(Package['ncurses-devel']) {
+        package { 'ncurses-devel' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['libX11-devel']) {
+        package { 'libX11-devel' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['mesa-libGL']) {
+        package { 'mesa-libGL' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+    
+      # install 32-bit library pre-reqs, because SDK (at least <= 19.0.3) is based on 32-bit
+      if ! defined(Package['glibc.i686']) {
+        package { 'glibc.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['glibc-devel.i686']) {
+        package { 'glibc-devel.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['libstdc++.i686']) {
+        package { 'libstdc++.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['zlib-devel.i686']) {
+        package { 'zlib-devel.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['ncurses-devel.i686']) {
+        package { 'ncurses-devel.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['libX11-devel.i686']) {
+        package { 'libX11-devel.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['libXrender.i686']) {
+        package { 'libXrender.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      if ! defined(Package['libXrandr.i686']) {
+        package { 'libXrandr.i686' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+    }
+    ubuntu, debian: {
+      if ! defined(Package['libgl1-mesa-dev']) {
+        package { 'mesa-libGL' : name => 'libgl1-mesa-dev', ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+      #if ! defined(Package['libgl1-mesa-dev:i386']) {
+      #  package { 'libgl1-mesa-dev:i386' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      #}
+      if ! defined(Package['ia32-libs']) {
+        package { 'ia32-libs' : ensure => present, before => Anchor['dophonegap-install-ready'] }
+      }
+    }
   }
-  if ! defined(Package['libX11-devel']) {
-    package { 'libX11-devel' : ensure => present, before => Anchor['dophonegap-install-ready'] }
-  }
-  
+
   anchor { 'dophonegap-install-ready' : }
 
   if ! defined(Package['phonegap']) {
@@ -73,6 +117,7 @@ class dophonegap (
   }
 
   class { 'dophonegap::sdk::android' :
+    user => $user,
     include_adt => $include_adt,
     require => Anchor['dophonegap-install-ready'],
   }
