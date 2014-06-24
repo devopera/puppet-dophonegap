@@ -1,0 +1,14 @@
+{
+  "name": "devopera-dophonegap",
+  "version": "0.9.0",
+  "author": "(c) Alex Stanhope, Devopera.com",
+  "summary": "Devopera Phonegap configuration module",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/devopera/puppet-dophonegap",
+  "project_page": "http://devopera.com/module/dophonegap",
+  "issues_url": "https://github.com/devopera/puppet-dophonegap/issues",
+  "description": "",
+  "dependencies": [
+    {"name":"devopera/docommon","version_requirement":"0.9.3"}
+  ]
+}
