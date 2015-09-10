@@ -116,7 +116,7 @@ class dophonegap (
     }
   }
 
-  class { 'dophonegap::sdk::android' :
+  class { 'doandroid::sdk' :
     user => $user,
     include_adt => $include_adt,
     require => Anchor['dophonegap-install-ready'],
